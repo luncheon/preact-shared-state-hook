@@ -1,0 +1,34 @@
+{
+  "name": "preact-shared-state-hook",
+  "version": "0.1.0",
+  "description": "Most straightforward way to create shareable state hooks for Preact.",
+  "license": "WTFPL",
+  "repository": "luncheon/preact-shared-state-hook",
+  "keywords": ["preact", "hook", "state"],
+  "main": "index.min.js",
+  "types": "index.d.ts",
+  "prettier": {
+    "printWidth": 140,
+    "endOfLine": "lf",
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": false,
+    "arrowParens": "avoid"
+  },
+  "scripts": {
+    "build": "terser -m --toplevel -o index.min.js index.js && npm t && gzip-size index.min.js",
+    "test": "esbuild --bundle --platform=node --jsx-factory=h --external:jsdom --outfile=test.bundle.js test.jsx && node test.bundle.js"
+  },
+  "peerDependencies": {
+    "preact": "*"
+  },
+  "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-preact-pure": "^2.2.3",
+    "esbuild": "^0.7.5",
+    "gzip-size-cli": "^3.0.0",
+    "jsdom": "^16.4.0",
+    "preact": "^10.5.2",
+    "terser": "^5.3.2"
+  }
+}
