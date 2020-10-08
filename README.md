@@ -130,9 +130,9 @@ const InputName = memo(() => {
   return (
     <form onSubmit={event => {
       event.preventDefault()
-      setNames(names => [...names, event.currentTarget.name.value])
+      setNames(names => [...names, event.currentTarget._name.value])
     }}>
-      <input name="name" placeholder="Name" />
+      <input name="_name" placeholder="Name" />
       <button>Add</button>
     </form>
   )
