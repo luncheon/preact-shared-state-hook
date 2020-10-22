@@ -3,7 +3,7 @@
 ![Types: included](https://badgen.net/npm/types/preact-shared-state-hook) ![License: WTFPL](https://badgen.net/npm/license/preact-shared-state-hook)
 
 Most straightforward way to create shareable state hooks for Preact.  
-It's only 20 lines of [source code](https://github.com/luncheon/preact-shared-state-hook/blob/main/index.js).
+It's only 40 lines of [source code](https://github.com/luncheon/preact-shared-state-hook/blob/main/index.js).
 
 ## Installation
 
@@ -13,23 +13,67 @@ $ npm i preact-shared-state-hook
 
 ## Usage
 
-Create state hooks with `createSharedState()` and use it in components.
+Create state hooks with `createSharedState()` and use them in components.  
+The state value can be shared by multiple components.
 
 ```jsx
 import { h, render } from "preact"
 import { memo } from "preact/compat"
 import { createSharedState } from "preact-shared-state-hook"
 
-// create state hook
+// create a state hook
 const [useCount, setCount] = createSharedState(0)
 
 const Counter = memo(() => {
-  // use state hook
+  // use the state value
   const count = useCount()
   return <button type="button" onClick={() => setCount(count + 1)}>{count}</button>
 })
 
 render(<Counter />, document.body.appendChild(document.createElement('main')))
+```
+
+Create computation hooks with `createSharedSelector()` and use them in components.  
+The computed value can be shared by multiple components.
+
+```jsx
+import { h, render, Fragment } from "preact"
+import { memo } from "preact/compat"
+import { createSharedState, createSharedSelector } from "preact-shared-state-hook"
+
+const [useCount1, setCount1] = createSharedState(0)
+const [useCount2, setCount2] = createSharedState(0)
+
+// create a computation hook
+const useProduct = createSharedSelector([useCount1, useCount2], (count1, count2) => count1 * count2)
+
+const Counter = memo(() => {
+  const count1 = useCount1()
+  const count2 = useCount2()
+  return (
+    <Fragment>
+      <button type="button" onClick={() => setCount1(count1 + 1)}>{count1}</button>
+      <button type="button" onClick={() => setCount2(count2 + 1)}>{count2}</button>
+    </Fragment>
+  )
+})
+
+const Product = memo(() => {
+  // use the computed value
+  const product = useProduct()
+  return <div>{product}</div>
+})
+
+const App = memo(() => {
+  return (
+    <Fragment>
+      <Counter />
+      <Product />
+    </Fragment>
+  )
+})
+
+render(<App />, document.body.appendChild(document.createElement('main')))
 ```
 
 Actions can be predefined.
@@ -52,116 +96,40 @@ const Counter = memo(() => {
 render(<Counter />, document.body.appendChild(document.createElement('main')))
 ```
 
-The state can be shared by multiple components.
-
-```jsx
-import { h, render, Fragment } from 'preact'
-import { memo } from "preact/compat"
-import { createSharedState } from "preact-shared-state-hook"
-
-const [useCount, setCount] = createSharedState(0)
-const increment = () => setCount(count => count + 1)
-const reset = () => setCount(0)
-
-const Counter = memo(() => {
-  const count = useCount()
-  return <button type="button" onClick={increment}>{count}</button>
-})
-
-const Reset = memo(() => {
-  return <button type="button" onClick={reset}>Reset</button>
-})
-
-const Badge = memo(() => {
-  const count = useCount()
-  return <div>{count}</div>
-})
-
-const App = memo(() => {
-  return (
-    <Fragment>
-      <Counter />
-      <Reset />
-      <Badge />
-    </Fragment>
-  )
-})
-
-render(<App />, document.body.appendChild(document.createElement('main')))
-```
-
-[CodeSandbox](https://codesandbox.io/s/grhvh?file=/src/index.tsx)
+[CodeSandbox](https://codesandbox.io/s/preact-shared-state-hook-example-i6qi2?file=/index.tsx)
 
 ## API
 
+### createSharedState
+
 ```ts
-createSharedState<S>(initialState: S) => [
-  /* useSharedState: */ () => S,
-  /* setSharedState: */ (state: S | ((previousState: S) => S)) => void,
-]
+const [useSharedState, setSharedState] = createSharedState(initialState)
+
+const state = useSharedState()
+
+setSharedState(nextState)
+setSharedState(state => nextState)
 ```
 
-The first returned value `useSharedState` must be called in functional components.  
-`useSharedState()` returns current state.
+Creates a hook to share a state.
 
-The second returned value `setSharedState` can be called anywhere.  
-`setSharedState()` re-renders the components that have called `useSharedState()`.
+The first returned value `useSharedState()` returns the current state value.  
+`useSharedState()` must be called in functional components.
 
-## Memoized Selectors
+The second returned value `setSharedState()` updates the state and re-renders the components that have called `useSharedState()`.  
+`setSharedState()` accepts a new state value or a function that computes a new state value from an old state value.  
+`setSharedState()` can be called anywhere.
 
-[memoize-one](https://github.com/alexreardon/memoize-one) can be used.
+### createSharedSelector
 
-```js
-import memoizeOne from "memoize-one"
-import { h, render, Fragment } from "preact"
-import { memo } from "preact/compat"
-import { createSharedState } from "preact-shared-state-hook"
+```ts
+const useSharedSelector = createSharedSelector([useSharedState1, useSharedState2, ...], (state1, state2, ...) => value)
 
-const [useNames, setNames] = createSharedState(['Alice', 'Bob', 'Charlie'])
-const [useSearchWord, setSearchWord] = createSharedState('')
-
-// memoized selector
-const useFilteredNames = (() => {
-  const selector = memoizeOne((names, searchWord) => names.filter(name => name.includes(searchWord)))
-  return () => selector(useNames(), useSearchWord())
-})()
-
-const InputName = memo(() => {
-  return (
-    <form onSubmit={event => {
-      event.preventDefault()
-      setNames(names => [...names, event.currentTarget._name.value])
-    }}>
-      <input name="_name" placeholder="Name" />
-      <button>Add</button>
-    </form>
-  )
-})
-
-const InputSearchWord = memo(() => {
-  const searchWord = useSearchWord()
-  return <input placeholder="Search" value={searchWord} onInput={event => setSearchWord(event.currentTarget.value)} />
-})
-
-const FilteredNames = memo(() => {
-  const filteredNames = useFilteredNames()
-  return <ul>{filteredNames.map(name => <li>{name}</li>)}</ul>
-})
-
-const App = memo(() => {
-  return (
-    <Fragment>
-      <InputName />
-      <InputSearchWord />
-      <FilteredNames />
-    </Fragment>
-  )
-})
-
-render(<App />, document.body.appendChild(document.createElement('main')))
+const value = useSharedSelector()
 ```
 
-[CodeSandbox](https://codesandbox.io/s/vp1bx?file=/src/index.tsx)
+Creates a hook to compute a value from some shared states.  
+`useSharedSelector()` must be called in functional components.
 
 ## License
 

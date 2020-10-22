@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "terser -c -m --toplevel -o index.min.js index.js && npm t && gzip-size index.min.js",
-    "test": "esbuild --bundle --platform=node --jsx-factory=h --external:jsdom --outfile=test.bundle.js test.jsx && node test.bundle.js"
+    "test": "esbuild --bundle --platform=node --jsx-factory=h --external:jsdom --outfile=test.bundle.js test.tsx && node test.bundle.js"
   },
   "peerDependencies": {
     "preact": "*"
