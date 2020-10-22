@@ -1,6 +1,6 @@
 {
   "name": "preact-shared-state-hook",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Most straightforward way to create shareable state hooks for Preact.",
   "license": "WTFPL",
   "repository": "luncheon/preact-shared-state-hook",
