@@ -2,7 +2,7 @@
 
 ![Types: included](https://badgen.net/npm/types/preact-shared-state-hook) ![License: WTFPL](https://badgen.net/npm/license/preact-shared-state-hook)
 
-Most straightforward way to create shareable state hooks for Preact.  
+Most straightforward way to create shareable state hooks for [Preact](https://preactjs.com/).  
 It's only 30 lines of [source code](https://github.com/luncheon/preact-shared-state-hook/blob/main/index.js).
 
 ## Installation
