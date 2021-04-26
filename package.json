@@ -21,18 +21,21 @@
   },
   "scripts": {
     "build": "terser -c -m --toplevel -o index.min.js index.js && npm t && gzip-size index.min.js",
-    "test": "esbuild --bundle --platform=node --jsx-factory=h --external:jsdom --outfile=test.bundle.js test.tsx && node test.bundle.js"
+    "test": "tsc -p . && esbuild --bundle --jsx-factory=h --external:assert --external:jsdom --outfile=test.bundle.js test.tsx && node test.bundle.js"
   },
   "peerDependencies": {
     "preact": "*"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.10.8",
+    "@types/jsdom": "^16.2.10",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-preact-pure": "^2.2.3",
-    "esbuild": "^0.7.19",
-    "gzip-size-cli": "^3.0.0",
-    "jsdom": "^16.4.0",
-    "preact": "^10.5.5",
-    "terser": "5.3.2"
+    "enzyme-adapter-preact-pure": "^3.1.0",
+    "esbuild": "^0.11.14",
+    "gzip-size-cli": "^4.0.0",
+    "jsdom": "^16.5.3",
+    "preact": "^10.5.13",
+    "terser": "5.3.2",
+    "typescript": "^4.2.4"
   }
 }

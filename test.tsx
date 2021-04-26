@@ -1,7 +1,6 @@
-/** @jsx h */
 import assert from 'assert'
 import enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-preact-pure'
+import { Adapter } from 'enzyme-adapter-preact-pure'
 import { JSDOM } from 'jsdom'
 import { h } from 'preact'
 import { memo } from 'preact/compat'
@@ -78,7 +77,7 @@ const App = () => (
   </main>
 )
 
-const app = enzyme.mount(<App />)
+const app = enzyme.mount(<App /> as any)
 const c1 = app.find('#counter1')
 const c2 = app.find('#counter2')
 const i1 = app.find('#indicator1')
