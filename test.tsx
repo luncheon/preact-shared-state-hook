@@ -101,6 +101,11 @@ c2.simulate('click')
 assert.deepStrictEqual(renderedCount, { c1: 3, c2: 2, i1: 3, r1: 1, s1: 3, p1: 4 })
 assert.deepStrictEqual(texts(), { c1: '12', c2: '21', i1: '12', s1: '144', p1: '3024' })
 
+assert.strictEqual(12, useCount1.snapshot())
+assert.strictEqual(21, useCount2.snapshot())
+assert.strictEqual(144, useSquared1.snapshot())
+assert.strictEqual(3024, useProduct1.snapshot())
+
 c2.simulate('click')
 assert.deepStrictEqual(renderedCount, { c1: 3, c2: 3, i1: 3, r1: 1, s1: 3, p1: 5 })
 assert.deepStrictEqual(texts(), { c1: '12', c2: '22', i1: '12', s1: '144', p1: '3168' })
