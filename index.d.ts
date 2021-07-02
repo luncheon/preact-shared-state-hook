@@ -4,6 +4,7 @@ export interface UseSharedState<S> {
 }
 
 export declare function createSharedState<S>(initialState: S): [UseSharedState<S>, (state: S | ((previousState: S) => S)) => void]
+export declare function createSharedState<S>(): [UseSharedState<S | undefined>, (state: S | undefined | ((previousState: S | undefined) => S | undefined)) => void]
 
 export declare function createSharedSelector<A, S>(useSharedStates: readonly [UseSharedState<A>], compute: (a: A) => S): UseSharedState<S>
 export declare function createSharedSelector<A, B, S>(useSharedStates: readonly [UseSharedState<A>, UseSharedState<B>], compute: (a: A, b: B) => S): UseSharedState<S>
