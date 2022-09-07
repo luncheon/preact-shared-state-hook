@@ -1,3 +1,5 @@
+> There is an official global state library [@preact/signals](https://preactjs.com/guide/v10/signals), that is much better!
+
 # preact-shared-state-hook
 
 ![Types: included](https://badgen.net/npm/types/preact-shared-state-hook) ![License: WTFPL](https://badgen.net/npm/license/preact-shared-state-hook)
